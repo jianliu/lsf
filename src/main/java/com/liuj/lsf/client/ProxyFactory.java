@@ -44,7 +44,6 @@ public class ProxyFactory {
         }
 
         Class clz = cc.toClass();
-        cc.writeFile("E://tmp\\");
         T instance = (T) clz.newInstance();
 
         //add client instance
