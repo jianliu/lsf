@@ -29,7 +29,7 @@ public class ZooKServerHandler extends ZooKRouteHandler implements ServerRoute {
         checkConnections2ZooK();
     }
 
-    @Override
+
     public void register(String interfaceId, String alisa) {
         String dataPath = getDataPath(interfaceId, alisa);
         if(infRegisterSet.contains(dataPath)){
@@ -55,7 +55,7 @@ public class ZooKServerHandler extends ZooKRouteHandler implements ServerRoute {
 
     private void checkConnections2ZooK(){
         new Thread(new Runnable() {
-            @Override
+
             public void run() {
                 int sleepTime = 10 * 60 * 1000;
                 for (;;) {

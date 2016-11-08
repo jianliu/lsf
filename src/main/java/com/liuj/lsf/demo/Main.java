@@ -2,6 +2,7 @@ package com.liuj.lsf.demo;
 
 import com.liuj.lsf.GlobalManager;
 import com.liuj.lsf.client.Client;
+import com.liuj.lsf.client.ClientFactory;
 import com.liuj.lsf.client.ProxyFactory;
 import com.liuj.lsf.config.ConsumerConfig;
 import com.liuj.lsf.demo.mock.IService;
@@ -22,9 +23,10 @@ public class Main {
 
         //全局的handler
         RouteHandle zooKClientHandler = new ZooKClientHandler(GlobalManager.zookeeperRoot, GlobalManager.zookeeperServerHost, GlobalManager.timeout);
-
         ConsumerConfig consumerConfig = genConsumerBean();
-        Client client = new Client(consumerConfig, zooKClientHandler);
+
+        Client client = ClientFactory.buildClient(consumerConfig, zooKClientHandler);
+
         IService iService = ProxyFactory.buildProxy(IService.class, client);
         String response = null;
 //        response = iService.println("you get this");

@@ -74,7 +74,7 @@ public class LSFDecoder extends ByteToMessageDecoder {
         BaseMsg msg = decodeBody(in, contentLength);
         if (msg != null) {
             in.readerIndex(frameLength);
-            logger.info("get message success");
+            logger.debug("get message success");
             out.add(msg);
         }
     }
@@ -98,13 +98,13 @@ public class LSFDecoder extends ByteToMessageDecoder {
 
     private boolean checkFrameBytePrefixLength(ByteBuf in){
         if (in.readableBytes() < unBodySliceStartLength) {
-            logger.info("size less than 6:{}", in.readableBytes());
+            logger.debug("size less than 6:{}", in.readableBytes());
             return false;
         }
 
         //不会导致readerIndex变更
         short magic = in.getUnsignedByte(in.readerIndex());
-        logger.info("magic:{}", magic);
+        logger.debug("magic:{}", magic);
         return true;
     }
 
