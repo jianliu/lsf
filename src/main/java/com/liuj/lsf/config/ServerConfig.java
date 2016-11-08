@@ -1,4 +1,4 @@
-package com.liuj.lsf.server;
+package com.liuj.lsf.config;
 
 import java.util.Map;
 

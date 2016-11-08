@@ -1,6 +1,7 @@
 package com.liuj.lsf.server;
 
-import com.liuj.lsf.consumer.ConsumerConfig;
+import com.liuj.lsf.config.ServerConfig;
+import com.liuj.lsf.config.ConsumerConfig;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

@@ -3,7 +3,7 @@ package com.liuj.lsf.transport.impl;
 import io.netty.channel.Channel;
 import com.liuj.lsf.client.ClientTransportFactory;
 import com.liuj.lsf.client.MsgFuture;
-import com.liuj.lsf.consumer.ConsumerConfig;
+import com.liuj.lsf.config.ConsumerConfig;
 import com.liuj.lsf.exceptions.LsfException;
 import com.liuj.lsf.msg.BaseMsg;
 import com.liuj.lsf.msg.RequestMsg;

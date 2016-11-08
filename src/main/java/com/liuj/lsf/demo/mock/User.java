@@ -1,4 +1,4 @@
-package com.liuj.lsf.mock;
+package com.liuj.lsf.demo.mock;
 
 import java.io.Serializable;
 

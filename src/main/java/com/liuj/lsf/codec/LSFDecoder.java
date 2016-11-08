@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import com.liuj.lsf.Constants;
 import com.liuj.lsf.codec.impl.JacksonCodec;
-import com.liuj.lsf.consumer.ConsumerConfig;
+import com.liuj.lsf.config.ConsumerConfig;
 import com.liuj.lsf.exceptions.LsfException;
 import com.liuj.lsf.msg.BaseMsg;
 import com.liuj.lsf.msg.MsgHeader;

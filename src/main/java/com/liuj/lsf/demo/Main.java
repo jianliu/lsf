@@ -3,9 +3,9 @@ package com.liuj.lsf.demo;
 import com.liuj.lsf.GlobalManager;
 import com.liuj.lsf.client.Client;
 import com.liuj.lsf.client.ProxyFactory;
-import com.liuj.lsf.consumer.ConsumerConfig;
-import com.liuj.lsf.mock.IService;
-import com.liuj.lsf.mock.User;
+import com.liuj.lsf.config.ConsumerConfig;
+import com.liuj.lsf.demo.mock.IService;
+import com.liuj.lsf.demo.mock.User;
 import com.liuj.lsf.route.RouteHandle;
 import com.liuj.lsf.route.impl.ZooKClientHandler;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class Main {
 
     private static ConsumerConfig genConsumerBean() {
         ConsumerConfig consumerBean = new ConsumerConfig();
-        consumerBean.setInterfaceClz("com.liuj.lsf.mock.IService");
+        consumerBean.setInterfaceClz("com.liuj.lsf.demo.mock.IService");
         consumerBean.setAlias("test");
         consumerBean.setTimeout(200000);
         return consumerBean;

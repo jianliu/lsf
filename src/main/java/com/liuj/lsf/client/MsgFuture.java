@@ -15,9 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class MsgFuture<V> implements java.util.concurrent.Future<V> {
 
     private Logger logger = LoggerFactory.getLogger(MsgFuture.class);
-
-    private BaseMsg request;
-
+    
     private int timeout;
 
     private volatile Object result;
@@ -29,7 +27,6 @@ public class MsgFuture<V> implements java.util.concurrent.Future<V> {
     private transient Condition condition = reentrantLock.newCondition();
 
     public MsgFuture(BaseMsg request, int timeout) {
-        this.request = request;
         this.timeout = timeout;
     }
 
@@ -46,7 +43,7 @@ public class MsgFuture<V> implements java.util.concurrent.Future<V> {
     }
 
     public V get() throws InterruptedException {
-        logger.info("sendTime:{}",sendTime);
+        logger.debug("sendTime:{}",sendTime);
         return get(timeout, TimeUnit.MILLISECONDS);
     }
 
@@ -66,7 +63,7 @@ public class MsgFuture<V> implements java.util.concurrent.Future<V> {
 
             reentrantLock.lock();
             try {
-                logger.info("await "+left+" ms");
+                logger.debug("await "+left+" ms");
                 condition.await(left,TimeUnit.MILLISECONDS);
             }finally {
                 reentrantLock.unlock();

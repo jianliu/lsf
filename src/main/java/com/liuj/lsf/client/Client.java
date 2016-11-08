@@ -1,7 +1,7 @@
 package com.liuj.lsf.client;
 
 import io.netty.channel.Channel;
-import com.liuj.lsf.consumer.ConsumerConfig;
+import com.liuj.lsf.config.ConsumerConfig;
 import com.liuj.lsf.exceptions.ExceptionHolder;
 import com.liuj.lsf.exceptions.LsfException;
 import com.liuj.lsf.msg.BaseMsg;
@@ -51,14 +51,7 @@ public class Client {
         if(!hasInit){
             init();
         }
-//        RequestMsg requestMsg = new RequestMsg();
-//        MsgHeader msgHeader = new MsgHeader();
-//        msgHeader.setClz("com.liuj.lsf.consumer.ConsumerConfig");
-//        requestMsg.setMsgHeader(msgHeader);
-//        ConsumerConfig consumerBean = genConsumerBean();
-//
-//        requestMsg.setConsumerBean(consumerBean);
-//        msgHeader.setMsgType(Constants.REQUEST_MSG);
+
         if(CollectionUtils.isEmpty(connectionList)){
             throw new LsfException("没有可用的连接");
         }

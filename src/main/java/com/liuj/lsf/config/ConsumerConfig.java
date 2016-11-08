@@ -1,4 +1,4 @@
-package com.liuj.lsf.consumer;
+package com.liuj.lsf.config;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ public class ConsumerConfig {
     private int timeout;
     private boolean lazy = false;
 
-    private RequestMethodDetail consumerDetail;
+    private RequestMethod requestMethod;
     /**
      * lsf自定义参数
      */
@@ -61,12 +61,12 @@ public class ConsumerConfig {
         this.timeout = timeout;
     }
 
-    public RequestMethodDetail getConsumerDetail() {
-        return consumerDetail;
+    public RequestMethod getRequestMethod() {
+        return requestMethod;
     }
 
-    public void setConsumerDetail(RequestMethodDetail consumerDetail) {
-        this.consumerDetail = consumerDetail;
+    public void setRequestMethod(RequestMethod requestMethod) {
+        this.requestMethod = requestMethod;
     }
 
     public Map<String, Object> getParams() {

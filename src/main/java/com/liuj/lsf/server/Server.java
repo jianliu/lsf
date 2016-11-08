@@ -1,6 +1,7 @@
 package com.liuj.lsf.server;
 
-import com.liuj.lsf.mock.IService;
+import com.liuj.lsf.config.ServerConfig;
+import com.liuj.lsf.demo.mock.IService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -8,7 +9,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import com.liuj.lsf.GlobalManager;
-import com.liuj.lsf.mock.IServerImpl;
+import com.liuj.lsf.demo.mock.IServerImpl;
 import com.liuj.lsf.route.ServerRoute;
 import com.liuj.lsf.route.impl.ZooKServerHandler;
 import org.slf4j.Logger;
@@ -66,21 +67,6 @@ public class Server {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
-    }
-
-
-    public static void main(String[] args) throws Exception {
-        ServerRoute serverRoute1 = new ZooKServerHandler(GlobalManager.zookeeperRoot, GlobalManager.zookeeperServerHost, GlobalManager.timeout);
-        Server server = new Server(serverRoute1);
-
-        ServerConfig serverBean = new ServerConfig();
-        serverBean.setAlias("test");
-        serverBean.setInterfaceClz(IService.class.getCanonicalName());
-        serverBean.setImpl(new IServerImpl());
-
-        server.registerServer(serverBean);
-        //start server
-        server.run();
     }
 
 }

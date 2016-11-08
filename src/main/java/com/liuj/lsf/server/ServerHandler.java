@@ -3,7 +3,7 @@ package com.liuj.lsf.server;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import com.liuj.lsf.Constants;
-import com.liuj.lsf.consumer.ConsumerConfig;
+import com.liuj.lsf.config.ConsumerConfig;
 import com.liuj.lsf.msg.MsgHeader;
 import com.liuj.lsf.msg.RequestMsg;
 import com.liuj.lsf.msg.ResponseMsg;

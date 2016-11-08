@@ -21,13 +21,14 @@ public class ZooKClientHandler extends ZooKRouteHandler implements RouteHandle {
         super(root, serverString, timeout);
     }
 
-    @Override
+
     public void subscribeInterface(String interfaceId, String alisa) {
         final String holePath = getDataPath(interfaceId, alisa);
         zkClient.subscribeDataChanges(holePath, new IZkDataListener() {
-            @Override
+
             public void handleDataChange(String dataPath, Object data) throws Exception {
-                List<Provider> providerList = getZKData(dataPath, (List<String>) data);
+
+                List<Provider> providerList = getZKData(dataPath,zkClient.getChildren(dataPath));
                 if (CollectionUtils.isNotEmpty(providerList)) {
                     changeProviders(providerList, holePath);
                     logger.debug("find new provides,change local cache.path:{},size:{}", dataPath, providerList.size());
@@ -36,7 +37,7 @@ public class ZooKClientHandler extends ZooKRouteHandler implements RouteHandle {
                 }
             }
 
-            @Override
+
             public void handleDataDeleted(String dataPath) throws Exception {
                 logger.warn("path is deleted:{}", dataPath);
             }
@@ -48,7 +49,6 @@ public class ZooKClientHandler extends ZooKRouteHandler implements RouteHandle {
     }
 
 
-    @Override
     public List<Provider> route(String interfaceId, String alisa) {
         String dataPath = getDataPath(interfaceId, alisa);
 

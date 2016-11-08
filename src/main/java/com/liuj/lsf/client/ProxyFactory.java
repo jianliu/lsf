@@ -1,8 +1,8 @@
 package com.liuj.lsf.client;
 
 import javassist.*;
-import com.liuj.lsf.consumer.ConsumerConfig;
-import com.liuj.lsf.consumer.RequestMethodDetail;
+import com.liuj.lsf.config.ConsumerConfig;
+import com.liuj.lsf.config.RequestMethod;
 import com.liuj.lsf.msg.RequestMsg;
 
 import java.lang.reflect.Method;
@@ -44,6 +44,7 @@ public class ProxyFactory {
         }
 
         Class clz = cc.toClass();
+        cc.writeFile("E://tmp\\");
         T instance = (T) clz.newInstance();
 
         //add client instance
@@ -94,29 +95,35 @@ public class ProxyFactory {
         sb.append(" {");
 
         //method body
-        sb.append(RequestMsg.class.getCanonicalName()).append(" requestMsg = ")
-                .append(RequestFactory.class.getCanonicalName()).append(".buildRequest();");
-        sb.append(ConsumerConfig.class.getCanonicalName()).append(" consumerConfig = client.getConsumerConfig();");
-        sb.append(RequestMethodDetail.class.getCanonicalName()).append(" requestDetail = new ")
-                .append(RequestMethodDetail.class.getCanonicalName()).append("();");
+
+
+        sb.append(RequestMethod.class.getCanonicalName()).append(" requestDetail = new ")
+                .append(RequestMethod.class.getCanonicalName()).append("();");
         sb.append("requestDetail.setMethod(\"").append(method.getName()).append("\");");
-        sb.append("requestDetail.setMethodParams(new Object[]{");
+        sb.append("Object[] params = new Object[").append(i).append("];");
+        sb.append("String[] parameterTypes = new String[").append(i).append("];");
         if(i>0){
             for(int j=0;j<i;j++){
-                sb.append("var").append(j);
-                if(j< i-1){
-                    sb.append(",");
-                }
+                sb.append("params[").append(j).append("] = ($w)$").append(j+1).append(" ;");
+                sb.append("parameterTypes[").append(j).append("] = \"").append(paramsTypes[j].getCanonicalName()).append("\" ;");
             }
         }
-        sb.append("});");
+        sb.append("requestDetail.setMethodParams(params);");
+        sb.append("requestDetail.setParameterTypes(parameterTypes);");
+
         sb.append(ConsumerConfig.class.getCanonicalName()).append(" newConsumerConfig = new ")
                 .append(ConsumerConfig.class.getCanonicalName()).append("();");
-        sb.append("newConsumerConfig.setInterfaceClz(consumerConfig.getInterfaceClz());");
-        sb.append("newConsumerConfig.setAlias(consumerConfig.getAlias());");
-        sb.append("newConsumerConfig.setConsumerDetail(requestDetail);");
-        sb.append("requestMsg.setConsumerBean(newConsumerConfig);");
-        sb.append("return (").append(returnType.getCanonicalName()).append(")client.invoke(requestMsg);");
+        sb.append("newConsumerConfig.setInterfaceClz(client.getConsumerConfig().getInterfaceClz());");
+        sb.append("newConsumerConfig.setAlias(client.getConsumerConfig().getAlias());");
+
+        sb.append(RequestMsg.class.getCanonicalName()).append(" requestMsg = ")
+                .append(RequestFactory.class.getCanonicalName()).append(".buildRequest(newConsumerConfig,requestDetail);");
+
+        if(returnType.equals(void.class)){
+            sb.append("return;");
+        }else {
+            sb.append("return (").append(returnType.getCanonicalName()).append(")client.invoke(requestMsg);");
+        }
 
         //end method
         sb.append("}");

@@ -1,7 +1,8 @@
 package com.liuj.lsf.server;
 
+import com.liuj.lsf.config.ServerConfig;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import com.liuj.lsf.consumer.ConsumerConfig;
+import com.liuj.lsf.config.ConsumerConfig;
 import com.liuj.lsf.exceptions.ExceptionHolder;
 import com.liuj.lsf.exceptions.LsfException;
 import com.liuj.lsf.utils.ReflectionUtils;
@@ -24,18 +25,18 @@ public abstract class AbstractServerHandler extends ChannelInboundHandlerAdapter
             Class targetClz = Class.forName(consumerBean.getInterfaceClz());
             //最终执行方法的实例
             Object instance = getServerInstanceByConsumer(consumerBean,targetClz);
-            String methodName = consumerBean.getConsumerDetail().getMethod();
-            Object[] params = consumerBean.getConsumerDetail().getMethodParams();
-
-            Class<?>[] parameterTypes = new Class<?>[params.length];
-            for(int i=0;i< params.length;i++){
-                parameterTypes[i]= getParameterTypes(params[i]);
+            String methodName = consumerBean.getRequestMethod().getMethod();
+            Object[] params = consumerBean.getRequestMethod().getMethodParams();
+            Class[] parameterTypes = new Class[params.length];
+            for(int i = 0; i< parameterTypes.length; i++){
+                String type = consumerBean.getRequestMethod().getParameterTypes()[i];
+                parameterTypes[i] = ReflectionUtils.forName(type);
             }
             Method method =targetClz.getMethod(methodName,parameterTypes);
             return method.invoke(instance,params);
         } catch (Throwable throwable) {
             logger.error("执行方法异常 接口:{},method:{}",consumerBean.getInterfaceClz(),
-                    consumerBean.getConsumerDetail().getMethod(), throwable);
+                    consumerBean.getRequestMethod().getMethod(), throwable);
             return new ExceptionHolder(new LsfException("server端执行失败", throwable));
         }
     }

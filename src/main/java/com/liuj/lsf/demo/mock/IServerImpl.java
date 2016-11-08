@@ -1,4 +1,4 @@
-package com.liuj.lsf.mock;
+package com.liuj.lsf.demo.mock;
 
 /**
  *
@@ -15,8 +15,7 @@ public class IServerImpl implements IService{
         return n + ",miss u";
     }
 
-    @Override
-    public User getUser(Integer id) {
+    public User getUser(int id) {
         System.out.println("println userId:"+id);
         User user = new User();
         user.setId(2);
