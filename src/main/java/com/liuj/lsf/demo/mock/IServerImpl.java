@@ -23,4 +23,12 @@ public class IServerImpl implements IService{
         return user;
     }
 
+    public void amVoid() {
+        System.out.println("in method amVoid");
+    }
+
+    public User findByUser(User user) {
+        System.out.println("in method findByUser");
+        return user;
+    }
 }

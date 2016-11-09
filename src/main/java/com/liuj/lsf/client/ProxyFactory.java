@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * 关于javassist和tomcat结合的具体疑问，参见
+ * http://www.cnblogs.com/mokeyliu/p/6043878.html
  * Created by cdliujian1 on 2016/11/4.
  */
 public class ProxyFactory {
@@ -30,7 +32,11 @@ public class ProxyFactory {
             return (T) CLASS_POOL_CACHE.get(key);
         }
 
-        ClassPool pool = ClassPool.getDefault();
+        ClassPool parent = ClassPool.getDefault();
+        ClassPool pool = new ClassPool(parent);
+        //tomcat下启动，不同的webapp有不同的classpath
+        pool.insertClassPath(new ClassClassPath(ProxyFactory.class));
+
         CtClass cc = pool.makeClass(tClass.getName() + "_Proxy_" + CLASS_INDEX.incrementAndGet());
          CtClass ctClass =  pool.get(tClass.getCanonicalName());
         // cc.setSuperclass(ctClass);
@@ -94,8 +100,6 @@ public class ProxyFactory {
         sb.append(" {");
 
         //method body
-
-
         sb.append(RequestMethod.class.getCanonicalName()).append(" requestDetail = new ")
                 .append(RequestMethod.class.getCanonicalName()).append("();");
         sb.append("requestDetail.setMethod(\"").append(method.getName()).append("\");");
@@ -119,6 +123,7 @@ public class ProxyFactory {
                 .append(RequestFactory.class.getCanonicalName()).append(".buildRequest(newConsumerConfig,requestDetail);");
 
         if(returnType.equals(void.class)){
+            sb.append("client.invoke(requestMsg);");
             sb.append("return;");
         }else {
             sb.append("return (").append(returnType.getCanonicalName()).append(")client.invoke(requestMsg);");

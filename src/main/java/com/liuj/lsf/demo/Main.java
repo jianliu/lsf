@@ -28,20 +28,26 @@ public class Main {
         Client client = ClientFactory.buildClient(consumerConfig, zooKClientHandler);
 
         IService iService = ProxyFactory.buildProxy(IService.class, client);
+        iService.amVoid();
+        User user = new User();
+        user.setId(2);
+        user.setName("what");
+        User newUser = iService.findByUser(user);
+        logger.info("user is :{}-{}",newUser.getId(), newUser.getName() );
         String response = null;
-//        response = iService.println("you get this");
-//        logger.info("response is:{}",response);
-        response = iService.printlnException("oha you");
-        logger.info("response is:{}", response);
-        response = iService.println("wahaha");
-        logger.info("response is:{}", response);
-        User user = iService.getUser(2);
-        logger.info("user is :{}-{}",user.getId(), user.getName() );
+////        response = iService.println("you get this");
+////        logger.info("response is:{}",response);
+//        response = iService.printlnException("oha you");
+//        logger.info("response is:{}", response);
+//        response = iService.println("wahaha");
+//        logger.info("response is:{}", response);
+//        User user = iService.getUser(2);
+//        logger.info("user is :{}-{}",user.getId(), user.getName() );
     }
 
     private static ConsumerConfig genConsumerBean() {
         ConsumerConfig consumerBean = new ConsumerConfig();
-        consumerBean.setInterfaceClz("com.liuj.lsf.demo.mock.IService");
+        consumerBean.setInterfaceClz(IService.class.getCanonicalName());
         consumerBean.setAlias("test");
         consumerBean.setTimeout(200000);
         return consumerBean;

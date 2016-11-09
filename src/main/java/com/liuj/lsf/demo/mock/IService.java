@@ -11,4 +11,8 @@ public interface IService {
 
     //todo type int will cannot be javassist class
     User getUser(int id);
+
+    void amVoid();
+
+    User findByUser(User user);
 }
