@@ -15,16 +15,26 @@ public class ServerMain {
 
     public static void main(String[] args) throws Exception {
         ServerRoute serverRoute1 = new ZooKServerHandler(GlobalManager.zookeeperRoot, GlobalManager.zookeeperServerHost, GlobalManager.timeout);
-        Server server = new Server(serverRoute1);
 
         ServerConfig serverBean = new ServerConfig();
         serverBean.setAlias("test");
-        serverBean.setInterfaceClz(IService.class.getCanonicalName());
+        serverBean.setInterfaceId(IService.class.getCanonicalName());
         serverBean.setImpl(new IServerImpl());
 
+        final Server server = new Server(serverRoute1);
+
+        new Thread(new Runnable() {
+            public void run() {
+                //start server
+                try {
+                    server.run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
         server.registerServer(serverBean);
-        //start server
-        server.run();
+
 
     }
 

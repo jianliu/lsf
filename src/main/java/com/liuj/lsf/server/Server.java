@@ -30,7 +30,7 @@ public class Server {
 
     public void registerServer(ServerConfig serverBean){
         ServerContainer.addServerBean(serverBean);
-        serverRoute.register(serverBean.getInterfaceClz(),serverBean.getAlias());
+        serverRoute.register(serverBean.getInterfaceId(),serverBean.getAlias());
     }
 
     public void run() throws Exception {

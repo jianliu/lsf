@@ -8,7 +8,7 @@ import java.util.Map;
 public class ConsumerConfig {
 
     private String id;
-    private String interfaceClz;
+    private String interfaceId;
     private String alias;
     private String protocol;
     private int timeout;
@@ -29,12 +29,12 @@ public class ConsumerConfig {
         this.id = id;
     }
 
-    public String getInterfaceClz() {
-        return interfaceClz;
+    public String getInterfaceId() {
+        return interfaceId;
     }
 
-    public void setInterfaceClz(String interfaceClz) {
-        this.interfaceClz = interfaceClz;
+    public void setInterfaceId(String interfaceId) {
+        this.interfaceId = interfaceId;
     }
 
     public String getAlias() {

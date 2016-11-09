@@ -47,7 +47,7 @@ public class Main {
 
     private static ConsumerConfig genConsumerBean() {
         ConsumerConfig consumerBean = new ConsumerConfig();
-        consumerBean.setInterfaceClz(IService.class.getCanonicalName());
+        consumerBean.setInterfaceId(IService.class.getCanonicalName());
         consumerBean.setAlias("test");
         consumerBean.setTimeout(200000);
         return consumerBean;

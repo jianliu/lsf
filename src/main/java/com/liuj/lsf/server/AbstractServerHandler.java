@@ -22,7 +22,7 @@ public abstract class AbstractServerHandler extends ChannelInboundHandlerAdapter
 
     protected Object invoke(ConsumerConfig consumerBean){
         try {
-            Class targetClz = Class.forName(consumerBean.getInterfaceClz());
+            Class targetClz = Class.forName(consumerBean.getInterfaceId());
             //最终执行方法的实例
             Object instance = getServerInstanceByConsumer(consumerBean,targetClz);
             String methodName = consumerBean.getRequestMethod().getMethod();
@@ -35,7 +35,7 @@ public abstract class AbstractServerHandler extends ChannelInboundHandlerAdapter
             Method method =targetClz.getMethod(methodName,parameterTypes);
             return method.invoke(instance,params);
         } catch (Throwable throwable) {
-            logger.error("执行方法异常 接口:{},method:{}",consumerBean.getInterfaceClz(),
+            logger.error("执行方法异常 接口:{},method:{}",consumerBean.getInterfaceId(),
                     consumerBean.getRequestMethod().getMethod(), throwable);
             return new ExceptionHolder(new LsfException("server端执行失败", throwable));
         }
@@ -43,7 +43,7 @@ public abstract class AbstractServerHandler extends ChannelInboundHandlerAdapter
 
     protected <T> T getServerInstanceByConsumer(ConsumerConfig consumerBean, Class<T> clz){
         ServerConfig serverBean = new ServerConfig();
-        serverBean.setInterfaceClz(consumerBean.getInterfaceClz());
+        serverBean.setInterfaceId(consumerBean.getInterfaceId());
         serverBean.setAlias(consumerBean.getAlias());
        return serverContainer.getServer(serverBean,clz);
     }

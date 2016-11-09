@@ -27,7 +27,7 @@ public class ProxyFactory {
 
     public static  <T> T buildProxy(Class<T> tClass, Client client) throws Exception {
 
-        String key = client.getConsumerConfig().getInterfaceClz()+"/"+client.getConsumerConfig().getAlias();
+        String key = client.getConsumerConfig().getInterfaceId()+"/"+client.getConsumerConfig().getAlias();
         if(CLASS_POOL_CACHE.get(key)!=null){
             return (T) CLASS_POOL_CACHE.get(key);
         }
@@ -116,7 +116,7 @@ public class ProxyFactory {
 
         sb.append(ConsumerConfig.class.getCanonicalName()).append(" newConsumerConfig = new ")
                 .append(ConsumerConfig.class.getCanonicalName()).append("();");
-        sb.append("newConsumerConfig.setInterfaceClz(client.getConsumerConfig().getInterfaceClz());");
+        sb.append("newConsumerConfig.setInterfaceId(client.getConsumerConfig().getInterfaceId());");
         sb.append("newConsumerConfig.setAlias(client.getConsumerConfig().getAlias());");
 
         sb.append(RequestMsg.class.getCanonicalName()).append(" requestMsg = ")

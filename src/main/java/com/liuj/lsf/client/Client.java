@@ -34,7 +34,7 @@ public class Client {
     public Client(ConsumerConfig consumerConfig, RouteHandle routeHandle) {
         this.consumerConfig = consumerConfig;
         this.routeHandle = routeHandle;
-        routeHandle.subscribeInterface(consumerConfig.getInterfaceClz(), consumerConfig.getAlias());
+        routeHandle.subscribeInterface(consumerConfig.getInterfaceId(), consumerConfig.getAlias());
         if(!consumerConfig.isLazy()) {
             init();
         }
@@ -71,7 +71,7 @@ public class Client {
     public void init() {
         lock.lock();
         try {
-            List<Provider> providerList = routeHandle.route(consumerConfig.getInterfaceClz(), consumerConfig.getAlias());
+            List<Provider> providerList = routeHandle.route(consumerConfig.getInterfaceId(), consumerConfig.getAlias());
             if(CollectionUtils.isEmpty(providerList)){
                 return;
             }

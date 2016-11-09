@@ -14,7 +14,7 @@ public class ServerApplicationContext implements ApplicationContextAware{
     private static ApplicationContext applicationContext;
 
     public String getBeanType(ConsumerConfig consumerBean){
-        return consumerBean.getInterfaceClz();
+        return consumerBean.getInterfaceId();
     }
 
     public ServerConfig getServerBean(Class<?> type, String clz){
@@ -23,7 +23,7 @@ public class ServerApplicationContext implements ApplicationContextAware{
         serverBean.setId("");
         serverBean.setImpl(instance);
         serverBean.setParams(null);
-        serverBean.setInterfaceClz(clz);
+        serverBean.setInterfaceId(clz);
         return serverBean;
     }
 
