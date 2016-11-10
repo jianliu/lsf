@@ -54,22 +54,23 @@ public class ZooKServerHandler extends ZooKRouteHandler implements ServerRoute {
     }
 
     private void checkConnections2ZooK(){
-        new Thread(new Runnable() {
+        Thread serverRecconet = new Thread(new Runnable() {
 
             public void run() {
                 int sleepTime = 10 * 60 * 1000;
                 for (;;) {
                     try {
                         Thread.sleep(sleepTime);
+                        reconnect();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    reconnect();
                 }
             }
 
-        }, "server端巡检zookeeper是否有自己的线程").start();
-
+        }, "server端巡检zookeeper是否有自己的线程");
+        serverRecconet.setDaemon(true);
+        serverRecconet.start();
     }
 
     private void reconnect() {

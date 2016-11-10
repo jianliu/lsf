@@ -23,7 +23,7 @@ public class ServerMain {
 
         final Server server = new Server(serverRoute1);
 
-        new Thread(new Runnable() {
+        Thread t= new Thread(new Runnable() {
             public void run() {
                 //start server
                 try {
@@ -32,7 +32,8 @@ public class ServerMain {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        t.start();
         server.registerServer(serverBean);
 
 

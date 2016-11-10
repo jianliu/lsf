@@ -3,6 +3,7 @@ package com.liuj.lsf.route.impl;
 import com.liuj.lsf.route.RouteHandle;
 import com.liuj.lsf.route.ZooKRouteHandler;
 import com.liuj.lsf.server.Provider;
+import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -24,22 +25,16 @@ public class ZooKClientHandler extends ZooKRouteHandler implements RouteHandle {
 
     public void subscribeInterface(String interfaceId, String alisa) {
         final String holePath = getDataPath(interfaceId, alisa);
-        zkClient.subscribeDataChanges(holePath, new IZkDataListener() {
-
-            public void handleDataChange(String dataPath, Object data) throws Exception {
-
-                List<Provider> providerList = getZKData(dataPath,zkClient.getChildren(dataPath));
+        //监控child改变
+        zkClient.subscribeChildChanges(holePath, new IZkChildListener() {
+            public void handleChildChange(String parentPath, List<String> currentChilds) throws Exception {
+                List<Provider> providerList = getZKData(holePath,currentChilds);
                 if (CollectionUtils.isNotEmpty(providerList)) {
                     changeProviders(providerList, holePath);
-                    logger.debug("find new provides,change local cache.path:{},size:{}", dataPath, providerList.size());
+                    logger.debug("find new provides,change local cache.path:{},size:{}", holePath, providerList.size());
                 } else {
                     logger.warn("can not find valid providers, cache not change");
                 }
-            }
-
-
-            public void handleDataDeleted(String dataPath) throws Exception {
-                logger.warn("path is deleted:{}", dataPath);
             }
         });
     }
