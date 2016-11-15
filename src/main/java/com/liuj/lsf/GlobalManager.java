@@ -12,7 +12,7 @@ public class GlobalManager {
 
     public static String zookeeperServerHost = "127.0.0.1:2181";
 
-    public static int timeout = 50000;
+    public static int timeout = 10000;
 
     public static void setServerPort(int serverPort) {
         GlobalManager.serverPort = serverPort;

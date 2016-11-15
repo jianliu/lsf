@@ -32,10 +32,14 @@ public class Main {
         User user = new User();
         user.setId(2);
         user.setName("what");
+        long start = System.currentTimeMillis();
+        long na =System.nanoTime();
         for(int i=0;i<1000;i++) {
             User newUser = iService.findByUser(user);
             logger.info("user is :{}-{}", newUser.getId(), newUser.getName());
         }
+        logger.info("cost time:{}na",System.nanoTime() - na);
+        logger.info("cst time:{}ms", System.currentTimeMillis() - start);
         String response = null;
 ////        response = iService.println("you get this");
 ////        logger.info("response is:{}",response);
@@ -51,7 +55,7 @@ public class Main {
         ConsumerConfig consumerBean = new ConsumerConfig();
         consumerBean.setInterfaceId(IService.class.getCanonicalName());
         consumerBean.setAlias("test");
-        consumerBean.setTimeout(200000);
+        consumerBean.setTimeout(2000);
         return consumerBean;
     }
 
