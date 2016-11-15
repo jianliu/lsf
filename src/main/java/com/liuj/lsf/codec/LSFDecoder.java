@@ -87,13 +87,18 @@ public class LSFDecoder extends ByteToMessageDecoder {
      */
     private BaseMsg decodeBody(ByteBuf in, int contentLength) {
         ByteBuf realBuf = in.slice(unBodySliceStartLength, contentLength);
+        //计数器+1
+        realBuf.retain();
         //headerlength
         int headerLength = realBuf.readInt();
         ByteBuf headerBuf = realBuf.slice(realBuf.readerIndex(), headerLength);
         byte[] header = new byte[headerLength];
         headerBuf.readBytes(header);
         MsgHeader msgHeader = decodeMessageHeader(header);
-        return ensureMsg(realBuf, msgHeader, headerLength + contentHeaderLengthByteLength);
+        BaseMsg baseMsg = ensureMsg(realBuf, msgHeader, headerLength + contentHeaderLengthByteLength);
+        //计算器-1，-1后如果计算器和初始值1相同，则会释放内存
+        realBuf.release();
+        return baseMsg;
     }
 
     private boolean checkFrameBytePrefixLength(ByteBuf in){

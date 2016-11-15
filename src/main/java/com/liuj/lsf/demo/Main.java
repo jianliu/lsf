@@ -32,8 +32,10 @@ public class Main {
         User user = new User();
         user.setId(2);
         user.setName("what");
-        User newUser = iService.findByUser(user);
-        logger.info("user is :{}-{}",newUser.getId(), newUser.getName() );
+        for(int i=0;i<1000;i++) {
+            User newUser = iService.findByUser(user);
+            logger.info("user is :{}-{}", newUser.getId(), newUser.getName());
+        }
         String response = null;
 ////        response = iService.println("you get this");
 ////        logger.info("response is:{}",response);
