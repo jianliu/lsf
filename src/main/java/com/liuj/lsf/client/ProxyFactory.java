@@ -118,9 +118,9 @@ public class ProxyFactory {
                 .append(ConsumerConfig.class.getCanonicalName()).append("();");
         sb.append("newConsumerConfig.setInterfaceId(client.getConsumerConfig().getInterfaceId());");
         sb.append("newConsumerConfig.setAlias(client.getConsumerConfig().getAlias());");
-
+        sb.append("newConsumerConfig.setRequestMethod(requestDetail);");
         sb.append(RequestMsg.class.getCanonicalName()).append(" requestMsg = ")
-                .append(RequestFactory.class.getCanonicalName()).append(".buildRequest(newConsumerConfig,requestDetail);");
+                .append(RequestFactory.class.getCanonicalName()).append(".buildRequest(newConsumerConfig);");
 
         if(returnType.equals(void.class)){
             sb.append("client.invoke(requestMsg);");

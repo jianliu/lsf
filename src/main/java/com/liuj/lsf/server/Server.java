@@ -1,7 +1,6 @@
 package com.liuj.lsf.server;
 
 import com.liuj.lsf.config.ServerConfig;
-import com.liuj.lsf.demo.mock.IService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -9,9 +8,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import com.liuj.lsf.GlobalManager;
-import com.liuj.lsf.demo.mock.IServerImpl;
 import com.liuj.lsf.route.ServerRoute;
-import com.liuj.lsf.route.impl.ZooKServerHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +21,16 @@ public class Server {
 
     private ServerRoute serverRoute;
 
+    private AbstractServerHandler serverHandler;
+
+    private NioEventLoopGroup workerGroup = new NioEventLoopGroup(200);
+
     public Server(ServerRoute serverRoute) {
         this.serverRoute = serverRoute;
+    }
+
+    public void setServerHandler(AbstractServerHandler serverHandler) {
+        this.serverHandler = serverHandler;
     }
 
     public void registerServer(ServerConfig serverBean){
@@ -33,15 +38,21 @@ public class Server {
         serverRoute.register(serverBean.getInterfaceId(),serverBean.getAlias());
     }
 
+
+
+    public void setWorkerGroup(NioEventLoopGroup workerGroup) {
+        this.workerGroup = workerGroup;
+    }
+
     public void run() throws Exception {
         final int port = GlobalManager.serverPort;
         final NioEventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
-        final NioEventLoopGroup workerGroup = new NioEventLoopGroup(200);
+        final NioEventLoopGroup workerGroup = this.workerGroup;
         try {
             ServerBootstrap b = new ServerBootstrap(); // (2)
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class) // (3)
-                    .childHandler(new ServerChannelInitializer())
+                    .childHandler(new ServerChannelInitializer(this.serverHandler))
                     .option(ChannelOption.SO_BACKLOG, 128)          // (5)
                     .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 

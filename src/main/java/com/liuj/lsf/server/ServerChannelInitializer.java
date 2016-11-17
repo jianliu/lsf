@@ -12,9 +12,14 @@ import com.liuj.lsf.codec.LSFEncoder;
 @ChannelHandler.Sharable
 public class ServerChannelInitializer extends ChannelInitializer<SocketChannel> {
 
+    private AbstractServerHandler serverChannelHandler;
+
+    public ServerChannelInitializer(AbstractServerHandler serverChannelHandler) {
+        this.serverChannelHandler = serverChannelHandler;
+    }
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ch.pipeline().addLast(new LSFDecoder(),new LSFEncoder(),new ServerHandler());
+        ch.pipeline().addLast(new LSFDecoder(),new LSFEncoder(),this.serverChannelHandler);
     }
 }

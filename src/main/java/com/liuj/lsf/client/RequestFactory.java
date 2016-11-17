@@ -11,7 +11,7 @@ import com.liuj.lsf.msg.RequestMsg;
  */
 public class RequestFactory {
 
-    public static RequestMsg buildRequest(ConsumerConfig consumerConfig, RequestMethod requestMethod){
+    public static RequestMsg buildRequest(ConsumerConfig consumerConfig){
         RequestMsg requestMsg = new RequestMsg();
         MsgHeader msgHeader = new MsgHeader();
         msgHeader.setClz(ConsumerConfig.class.getCanonicalName());
@@ -19,7 +19,6 @@ public class RequestFactory {
 
         requestMsg.setMsgHeader(msgHeader);
         requestMsg.setConsumerBean(consumerConfig);
-        requestMsg.getConsumerBean().setRequestMethod(requestMethod);
         return requestMsg;
     }
 

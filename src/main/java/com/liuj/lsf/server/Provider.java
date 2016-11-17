@@ -10,9 +10,6 @@ public class Provider {
     private String host;
     private int port;
 
-    private transient Channel channel;
-
-
     public String getHost() {
         return host;
     }
@@ -29,11 +26,4 @@ public class Provider {
         this.port = port;
     }
 
-    public Channel getChannel() {
-        return channel;
-    }
-
-    public void setChannel(Channel channel) {
-        this.channel = channel;
-    }
 }

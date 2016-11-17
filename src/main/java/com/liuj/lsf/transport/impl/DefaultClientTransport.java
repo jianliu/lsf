@@ -1,5 +1,6 @@
 package com.liuj.lsf.transport.impl;
 
+import com.liuj.lsf.Constants;
 import io.netty.channel.Channel;
 import com.liuj.lsf.client.ClientTransportFactory;
 import com.liuj.lsf.client.MsgFuture;
@@ -63,7 +64,11 @@ public class DefaultClientTransport implements ClientTransport {
     public ResponseMsg sendMsg(BaseMsg baseMsg) {
 
         baseMsg.getMsgHeader().setMsgId(requestMsgId.getAndIncrement());
-
+        if(baseMsg instanceof RequestMsg) {
+            baseMsg.getMsgHeader().setMsgType(Constants.REQUEST_MSG);
+        }else if(baseMsg instanceof ResponseMsg){
+            baseMsg.getMsgHeader().setMsgType(Constants.RESPONSE_MSG);
+        }
         MsgFuture<ResponseMsg> msgFuture = this.sendAsync(baseMsg);
         try {
 
@@ -110,6 +115,10 @@ public class DefaultClientTransport implements ClientTransport {
 
     public void setProvider(Provider provider) {
         this.provider = provider;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 
     public void setConsumerConfig(ConsumerConfig consumerConfig) {

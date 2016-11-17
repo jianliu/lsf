@@ -23,12 +23,12 @@ public class ServerHandler extends AbstractServerHandler {
         Channel channel = ctx.channel();
         if (msg instanceof RequestMsg) {
             RequestMsg requestMsg = (RequestMsg) msg;
-            ConsumerConfig consumerBean = ((RequestMsg) msg).getConsumerBean();
+            Object consumerBean = ((RequestMsg) msg).getConsumerBean();
             logger.info("find RequestMsg ");
             ResponseMsg responseMsg = new ResponseMsg();
             responseMsg.setReceiveTime(System.currentTimeMillis());
 
-            Object result = invoke(consumerBean);
+            Object result = invoke((ConsumerConfig)consumerBean);
 
             MsgHeader msgHeader = new MsgHeader();
             msgHeader.setMsgType(Constants.RESPONSE_MSG);

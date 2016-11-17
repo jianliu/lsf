@@ -12,7 +12,7 @@ public class RequestMsg extends BaseMsg{
     /**
      * this object is msgBody
      */
-    private ConsumerConfig consumerBean;
+    private Object consumerBean;
 
     private String targetAddress;
 
@@ -24,11 +24,11 @@ public class RequestMsg extends BaseMsg{
         this.sendTime = sendTime;
     }
 
-    public ConsumerConfig getConsumerBean() {
+    public Object getConsumerBean() {
         return consumerBean;
     }
 
-    public void setConsumerBean(ConsumerConfig consumerBean) {
+    public void setConsumerBean(Object consumerBean) {
         this.consumerBean = consumerBean;
     }
 

@@ -19,20 +19,20 @@ public class ClientTransportFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientTransportFactory.class);
 
-    public static Channel buildChannel(final Provider provider) {
+    public static Channel buildChannel(String host,int port){
         Channel channel = null;
         Bootstrap b = new Bootstrap(); // (1)
         b.group(new NioEventLoopGroup()); // (2)
         b.channel(NioSocketChannel.class); // (3)
         b.option(ChannelOption.SO_KEEPALIVE, true); // (4)
-        b.handler(new ClientChannelInitializer());
+        b.handler(new ClientChannelInitializer(new ClientHandler()));
 
         // Start the client.
         try {
-            ChannelFuture f = b.connect(provider.getHost(), provider.getPort()).sync();
+            ChannelFuture f = b.connect(host, port).sync();
             if (f.isSuccess()) {
                 channel = f.channel();
-                logger.info("connect to server success,host--{},port--{}", provider.getHost(), provider.getPort());
+                logger.info("connect to server success,host--{},port--{}", host, port);
             } else {
                 throw new LsfException("建立连接失败");
             }
@@ -44,7 +44,22 @@ public class ClientTransportFactory {
         return channel;
     }
 
+    public static Channel buildChannel(final Provider provider) {
+       return buildChannel(provider.getHost(),provider.getPort());
+    }
+
+
+    public static DefaultClientTransport buildTransport(String host, int port, Channel channel) {
+        Provider provider =new Provider();
+        provider.setHost(host);
+        provider.setPort(port);
+        return buildTransport(provider,channel);
+    }
+
     public static DefaultClientTransport buildTransport(Provider provider, Channel channel) {
+        if(provider == null){
+            throw new IllegalArgumentException("provider must not be null!");
+        }
         DefaultClientTransport clientTransport = new DefaultClientTransport();
         clientTransport.setChannel(channel);
         clientTransport.setProvider(provider);

@@ -34,8 +34,10 @@ public class Client {
     public Client(ConsumerConfig consumerConfig, RouteHandle routeHandle) {
         this.consumerConfig = consumerConfig;
         this.routeHandle = routeHandle;
-        routeHandle.subscribeInterface(consumerConfig.getInterfaceId(), consumerConfig.getAlias());
-        if(!consumerConfig.isLazy()) {
+        if(routeHandle != null) {
+            routeHandle.subscribeInterface(consumerConfig.getInterfaceId(), consumerConfig.getAlias());
+        }
+        if(consumerConfig!=null && !consumerConfig.isLazy()) {
             init();
         }
     }
