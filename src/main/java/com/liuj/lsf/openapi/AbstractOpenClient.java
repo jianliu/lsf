@@ -30,6 +30,19 @@ public abstract class AbstractOpenClient implements IClient {
         this.clientTransport = ClientTransportFactory.buildTransport(this.host, this.port, channel);
     }
 
+    public boolean isActive() {
+        return this.getChannel() !=null  && this.getChannel().isOpen() && this.getChannel().isActive();
+    }
+
+    public void reconnect() {
+        try{
+            this.getChannel().close();
+        }catch (Exception e){
+
+        }
+        this.clientTransport.reconnect();
+    }
+
     /**
      * 设置响应超时时间
      *
@@ -75,7 +88,7 @@ public abstract class AbstractOpenClient implements IClient {
 
         MsgHeader msgHeader = new MsgHeader();
         msgHeader.setClz(ReflectionUtils.getName(whatever.getClass()));
-
+        requestMsg.setMsgHeader(msgHeader);
         if (this.clientTransport.getChannel().isOpen() && this.clientTransport.getChannel().isActive()) {
             this.clientTransport.reconnect();
         }

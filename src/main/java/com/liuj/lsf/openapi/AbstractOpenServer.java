@@ -2,6 +2,7 @@ package com.liuj.lsf.openapi;
 
 import com.liuj.lsf.server.AbstractServerHandler;
 import com.liuj.lsf.server.Server;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -11,10 +12,10 @@ import io.netty.channel.socket.SocketChannel;
  */
 public abstract class AbstractOpenServer implements IServer{
 
-    private Server server = new Server(null);
+    private Server server;
 
-    public void setServerChannelHandler(AbstractServerHandler serverChannel) {
-        server.setServerHandler(serverChannel);
+    public void init(ChannelInboundHandlerAdapter serverHandler, int port) {
+        server = new Server(null,serverHandler, port);
     }
 
     public void setWorkerGroup(NioEventLoopGroup workerGroup) {

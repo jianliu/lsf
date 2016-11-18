@@ -130,7 +130,7 @@ public class LSFDecoder extends ByteToMessageDecoder {
             if (bodyLength > 0) {
                 byte[] body = new byte[bodyLength];
                 msg.getMsgBody().readBytes(body);
-                ConsumerConfig consumerBean = codec.decode(body, ConsumerConfig.class);
+                Object consumerBean = codec.decode(body,ReflectionUtils.forName(msgHeader.getClz()));
                 msg.setConsumerBean(consumerBean);
             }
             return msg;

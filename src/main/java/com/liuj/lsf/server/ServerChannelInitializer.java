@@ -1,6 +1,7 @@
 package com.liuj.lsf.server;
 
 import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import com.liuj.lsf.codec.LSFDecoder;
@@ -12,9 +13,9 @@ import com.liuj.lsf.codec.LSFEncoder;
 @ChannelHandler.Sharable
 public class ServerChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-    private AbstractServerHandler serverChannelHandler;
+    private ChannelInboundHandlerAdapter serverChannelHandler;
 
-    public ServerChannelInitializer(AbstractServerHandler serverChannelHandler) {
+    public ServerChannelInitializer(ChannelInboundHandlerAdapter serverChannelHandler) {
         this.serverChannelHandler = serverChannelHandler;
     }
 

@@ -1,6 +1,7 @@
 package com.liuj.lsf.openapi;
 
 import com.liuj.lsf.server.AbstractServerHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.nio.NioEventLoopGroup;
 
 /**
@@ -11,8 +12,9 @@ public interface IServer {
     /**
      * 基于netty的服务端channel处理器
      * @param serverChannel
+     * @param port
      */
-    void setServerChannelHandler(AbstractServerHandler serverChannel);
+    void init(ChannelInboundHandlerAdapter serverChannel, int port);
 
     /**
      * 基于netty的服务端非阻塞worker多路复用

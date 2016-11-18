@@ -4,6 +4,7 @@ import com.liuj.lsf.config.ServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -19,18 +20,18 @@ public class Server {
 
     private final static Logger logger = LoggerFactory.getLogger(Server.class);
 
+    private int port;
+
     private ServerRoute serverRoute;
 
-    private AbstractServerHandler serverHandler;
+    private ChannelInboundHandlerAdapter serverHandler;
 
     private NioEventLoopGroup workerGroup = new NioEventLoopGroup(200);
 
-    public Server(ServerRoute serverRoute) {
+    public Server(ServerRoute serverRoute, ChannelInboundHandlerAdapter serverHandler, int port) {
         this.serverRoute = serverRoute;
-    }
-
-    public void setServerHandler(AbstractServerHandler serverHandler) {
         this.serverHandler = serverHandler;
+        this.port = port;
     }
 
     public void registerServer(ServerConfig serverBean){
@@ -45,7 +46,6 @@ public class Server {
     }
 
     public void run() throws Exception {
-        final int port = GlobalManager.serverPort;
         final NioEventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
         final NioEventLoopGroup workerGroup = this.workerGroup;
         try {

@@ -9,6 +9,17 @@ import io.netty.channel.ChannelHandler;
 public interface IClient {
 
     /**
+     * client连接是否可用
+     * @return
+     */
+    boolean isActive();
+
+    /**
+     * 重连接
+     */
+    void reconnect();
+
+    /**
      * 设置响应超时时间
      * @param mills
      */

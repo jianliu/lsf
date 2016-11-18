@@ -6,7 +6,7 @@ package com.liuj.lsf;
 public class GlobalManager {
 
     //server的启动port
-    public static int serverPort = 2222;
+    public static int serverPort = 2211;
 
     public static String zookeeperRoot = "/lsf3";
 
