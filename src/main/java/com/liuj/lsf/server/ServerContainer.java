@@ -16,7 +16,7 @@ public class ServerContainer {
         serverMap.put(serverBean.getInterfaceId() + "/" + serverBean.getAlias(), serverBean);
     }
 
-    public <T> T getServer(ServerConfig serverBean, Class<T> clz) {
+    public static  <T> T getServer(ServerConfig serverBean, Class<T> clz) {
         if (serverBean.getImpl() != null) {
             return (T) serverBean.getImpl();
         }

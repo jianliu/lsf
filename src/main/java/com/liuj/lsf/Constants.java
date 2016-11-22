@@ -15,7 +15,7 @@ public class Constants {
 
     public static final int RESPONSE_MSG = 2;
 
-    public static final String Client_Handler = "com.liuj.lsf.Client_Handler";
+    public static final String CLIENT_HANDLER = "com.liuj.lsf.CLIENT_HANDLER";
 
     public static final String NULL_RESULT_CLASS = "null";
 

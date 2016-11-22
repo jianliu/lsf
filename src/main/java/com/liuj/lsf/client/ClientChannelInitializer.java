@@ -24,7 +24,7 @@ public class ClientChannelInitializer extends ChannelInitializer<SocketChannel> 
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast(new LSFEncoder());
         pipeline.addLast(new LSFDecoder());
-        pipeline.addLast(Constants.Client_Handler, clientHandler);
+        pipeline.addLast(Constants.CLIENT_HANDLER, clientHandler);
     }
 
 

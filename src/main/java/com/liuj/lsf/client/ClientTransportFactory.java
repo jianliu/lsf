@@ -1,5 +1,7 @@
 package com.liuj.lsf.client;
 
+import com.liuj.lsf.core.ResponseListener;
+import com.liuj.lsf.core.impl.LsfResponseClientListener;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -11,6 +13,9 @@ import com.liuj.lsf.transport.ClientTransport;
 import com.liuj.lsf.transport.impl.DefaultClientTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by cdliujian1 on 2016/11/1.
@@ -25,7 +30,12 @@ public class ClientTransportFactory {
         b.group(new NioEventLoopGroup()); // (2)
         b.channel(NioSocketChannel.class); // (3)
         b.option(ChannelOption.SO_KEEPALIVE, true); // (4)
-        b.handler(new ClientChannelInitializer(new ClientHandler()));
+
+        List<ResponseListener> responseListeners = new ArrayList<ResponseListener>();
+        responseListeners.add(new LsfResponseClientListener());
+        ClientHandler clientHandler = new ClientHandler(responseListeners);
+
+        b.handler(new ClientChannelInitializer(clientHandler));
 
         // Start the client.
         try {
@@ -63,13 +73,13 @@ public class ClientTransportFactory {
         DefaultClientTransport clientTransport = new DefaultClientTransport();
         clientTransport.setChannel(channel);
         clientTransport.setProvider(provider);
-        ClientHandler clientHandler = (ClientHandler) channel.pipeline().get(Constants.Client_Handler);
+        ClientHandler clientHandler = (ClientHandler) channel.pipeline().get(Constants.CLIENT_HANDLER);
         clientHandler.setClientTransport(clientTransport);
         return clientTransport;
     }
 
     public static ClientTransport buildTransport(DefaultClientTransport clientTransport) {
-        ClientHandler clientHandler = (ClientHandler) clientTransport.getChannel().pipeline().get(Constants.Client_Handler);
+        ClientHandler clientHandler = (ClientHandler) clientTransport.getChannel().pipeline().get(Constants.CLIENT_HANDLER);
         clientHandler.setClientTransport(clientTransport);
         return clientTransport;
     }

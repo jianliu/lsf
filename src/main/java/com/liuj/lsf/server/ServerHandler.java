@@ -1,21 +1,17 @@
 package com.liuj.lsf.server;
 
-import com.liuj.lsf.config.ServerConfig;
-import com.liuj.lsf.exceptions.ExceptionHolder;
-import com.liuj.lsf.exceptions.LsfException;
-import com.liuj.lsf.utils.ReflectionUtils;
+import com.liuj.lsf.core.RequestHandle;
+import com.liuj.lsf.msg.RequestMsg;
+import com.liuj.lsf.msg.ResponseMsg;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import com.liuj.lsf.Constants;
-import com.liuj.lsf.config.ConsumerConfig;
-import com.liuj.lsf.msg.MsgHeader;
-import com.liuj.lsf.msg.RequestMsg;
-import com.liuj.lsf.msg.ResponseMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by cdliujian1 on 2016/6/15.
@@ -24,6 +20,13 @@ import java.lang.reflect.Method;
 public class ServerHandler extends AbstractServerHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(ServerHandler.class);
+
+    private List<RequestHandle> requestHandleList = new ArrayList<RequestHandle>();
+
+
+    public ServerHandler(List<RequestHandle> requestHandleList) {
+        this.requestHandleList = requestHandleList;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -36,22 +39,22 @@ public class ServerHandler extends AbstractServerHandler {
             ResponseMsg responseMsg = new ResponseMsg();
             responseMsg.setReceiveTime(System.currentTimeMillis());
 
-            Object result = invoke((ConsumerConfig)consumerBean);
-
-            MsgHeader msgHeader = new MsgHeader();
-            msgHeader.setMsgType(Constants.RESPONSE_MSG);
-
-            if(result != null) {
-                msgHeader.setClz(result.getClass().getName());
-            }else {
-                msgHeader.setClz(Constants.NULL_RESULT_CLASS);
+            Object result = null;
+            boolean requestHandled = false;
+            for (RequestHandle requestHandle : requestHandleList) {
+                if (requestHandle.canHandle(consumerBean)) {
+                    requestHandled = true;
+                    result = requestHandle.handleReq(requestMsg.getMsgHeader(), channel, consumerBean);
+                    break;
+                }
             }
 
-            responseMsg.setMsgHeader(msgHeader);
-            responseMsg.getMsgHeader().setMsgId(requestMsg.getMsgId());
-            responseMsg.setResponse(result);
+            if (!requestHandled) {
+                logger.warn("消息类型:{} 未发现可以处理的requestHandle.", consumerBean == null ? "null" :
+                        consumerBean.getClass().getCanonicalName());
+            }
+            sendResponse(requestMsg.getMsgId(), channel, result);
 
-            channel.writeAndFlush(responseMsg, channel.voidPromise());
         } else if (msg instanceof ResponseMsg) {
             //receive the callback ResponseMessage
             ResponseMsg responseMsg = (ResponseMsg) msg;
@@ -79,35 +82,7 @@ public class ServerHandler extends AbstractServerHandler {
         ctx.close();
     }
 
-
-    protected ServerContainer serverContainer = new ServerContainer();
-
-    protected Object invoke(ConsumerConfig consumerBean){
-        try {
-            Class targetClz = Class.forName(consumerBean.getInterfaceId());
-            //最终执行方法的实例
-            Object instance = getServerInstanceByConsumer(consumerBean,targetClz);
-            String methodName = consumerBean.getRequestMethod().getMethod();
-            Object[] params = consumerBean.getRequestMethod().getMethodParams();
-            Class[] parameterTypes = new Class[params.length];
-            for(int i = 0; i< parameterTypes.length; i++){
-                String type = consumerBean.getRequestMethod().getParameterTypes()[i];
-                parameterTypes[i] = ReflectionUtils.forName(type);
-            }
-            Method method =targetClz.getMethod(methodName,parameterTypes);
-            return method.invoke(instance,params);
-        } catch (Throwable throwable) {
-            logger.error("执行方法异常 接口:{},method:{}",consumerBean.getInterfaceId(),
-                    consumerBean.getRequestMethod().getMethod(), throwable);
-            return new ExceptionHolder(new LsfException("server端执行失败", throwable));
-        }
+    public void setRequestHandleList(RequestHandle... requestHandleList) {
+        this.requestHandleList = Arrays.asList(requestHandleList);
     }
-
-    protected <T> T getServerInstanceByConsumer(ConsumerConfig consumerBean, Class<T> clz){
-        ServerConfig serverBean = new ServerConfig();
-        serverBean.setInterfaceId(consumerBean.getInterfaceId());
-        serverBean.setAlias(consumerBean.getAlias());
-        return serverContainer.getServer(serverBean,clz);
-    }
-
 }

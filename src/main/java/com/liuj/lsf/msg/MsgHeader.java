@@ -21,6 +21,13 @@ public class MsgHeader {
      */
     private Integer length;
 
+    public MsgHeader() {
+    }
+
+    public MsgHeader(int msgType) {
+        this.msgType = msgType;
+    }
+
     public long getMsgId() {
         return msgId;
     }

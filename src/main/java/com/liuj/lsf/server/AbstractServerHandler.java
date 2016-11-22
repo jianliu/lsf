@@ -27,14 +27,34 @@ public abstract class AbstractServerHandler extends ChannelInboundHandlerAdapter
     }
 
     protected void sendResponse(Channel channel, Object messageResult) {
-        MsgHeader msgHeader = new MsgHeader();
-        msgHeader.setClz(messageResult.getClass().getCanonicalName());
-        msgHeader.setMsgType(Constants.RESPONSE_MSG);
+        MsgHeader msgHeader = new MsgHeader(Constants.RESPONSE_MSG);
+        if(messageResult != null) {
+            msgHeader.setClz(messageResult.getClass().getName());
+        }else {
+            msgHeader.setClz(Constants.NULL_RESULT_CLASS);
+        }
 
         ResponseMsg responseMsg = new ResponseMsg();
         responseMsg.setReceiveTime(System.currentTimeMillis());
         responseMsg.setResponse(messageResult);
         responseMsg.setMsgHeader(msgHeader);
+        channel.writeAndFlush(responseMsg, channel.voidPromise());
+    }
+
+    protected void sendResponse(long messageId, Channel channel, Object messageResult) {
+        MsgHeader msgHeader = new MsgHeader(Constants.RESPONSE_MSG);
+        if(messageResult != null) {
+            msgHeader.setClz(messageResult.getClass().getName());
+        }else {
+            msgHeader.setClz(Constants.NULL_RESULT_CLASS);
+        }
+
+        ResponseMsg responseMsg = new ResponseMsg();
+        responseMsg.setReceiveTime(System.currentTimeMillis());
+        responseMsg.setResponse(messageResult);
+        responseMsg.setMsgHeader(msgHeader);
+        responseMsg.getMsgHeader().setMsgId(messageId);
+
         channel.writeAndFlush(responseMsg, channel.voidPromise());
     }
 

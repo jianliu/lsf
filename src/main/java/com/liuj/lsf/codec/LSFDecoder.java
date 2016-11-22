@@ -52,7 +52,7 @@ public class LSFDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(
             ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        logger.info("readableBytes:{}", in.readableBytes());
+        logger.debug("readableBytes:{}", in.readableBytes());
         if(!checkFrameBytePrefixLength(in)){
             return;
         }

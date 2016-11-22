@@ -25,8 +25,8 @@ public abstract class AbstractOpenClient implements IClient {
         this.port = port;
         this.clientHandler = clientHandler;
         Channel channel = ClientTransportFactory.buildChannel(this.host, this.port);
-        channel.pipeline().remove(Constants.Client_Handler);
-        channel.pipeline().addLast(Constants.Client_Handler, this.clientHandler);
+        channel.pipeline().remove(Constants.CLIENT_HANDLER);
+        channel.pipeline().addLast(Constants.CLIENT_HANDLER, this.clientHandler);
         this.clientTransport = ClientTransportFactory.buildTransport(this.host, this.port, channel);
     }
 
