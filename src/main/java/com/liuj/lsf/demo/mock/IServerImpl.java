@@ -28,7 +28,7 @@ public class IServerImpl implements IService{
     }
 
     public User findByUser(User user) {
-        System.out.println("in method findByUser");
+        System.out.println("in method findByUser" + user.getId());
         return user;
     }
 }

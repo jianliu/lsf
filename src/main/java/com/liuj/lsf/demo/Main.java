@@ -30,11 +30,12 @@ public class Main {
         IService iService = ProxyFactory.buildProxy(IService.class, client);
         iService.amVoid();
         User user = new User();
-        user.setId(2);
+
         user.setName("what");
         long start = System.currentTimeMillis();
         long na =System.nanoTime();
         for(int i=0;i<1000;i++) {
+            user.setId(i);
             User newUser = iService.findByUser(user);
             logger.info("user is :{}-{}", newUser.getId(), newUser.getName());
         }

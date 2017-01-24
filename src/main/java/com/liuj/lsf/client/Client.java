@@ -25,10 +25,11 @@ public class Client {
 
     private Logger logger = LoggerFactory.getLogger(Client.class);
     private ConsumerConfig consumerConfig;
-    private List<Connection> connectionList = new ArrayList<Connection>();
+    private volatile List<Connection> connectionList = new ArrayList<Connection>();
     private ReentrantLock lock = new ReentrantLock();
-    boolean hasInit = false;
+    private volatile boolean  hasInit = false;
 
+    private LoadBalance loadBalance;
     private RouteHandle routeHandle;
 
     public Client(ConsumerConfig consumerConfig, RouteHandle routeHandle) {
@@ -44,7 +45,7 @@ public class Client {
 
 
     /**
-     * 通过反射或javassist直接调用
+     * 通过反射或javassist直接调用，访问远程方法
      * @param baseMsg
      * @return
      * @throws Exception
@@ -58,7 +59,7 @@ public class Client {
             throw new LsfException("没有可用的连接");
         }
         try {
-            Connection connection = connectionList.get(0);
+            Connection connection = loadBalance.getConnection();
             ResponseMsg responseMsg = connection.getClientTransport().sendMsg(baseMsg);
             Object responseResult = responseMsg.getResponse();
             if(responseResult instanceof ExceptionHolder){
@@ -70,9 +71,17 @@ public class Client {
         }
     }
 
+    /**
+     * 初始化连接池
+     */
     public void init() {
         lock.lock();
+
         try {
+            //防止并发init
+            if(hasInit){
+                return;
+            }
             List<Provider> providerList = routeHandle.route(consumerConfig.getInterfaceId(), consumerConfig.getAlias());
             if(CollectionUtils.isEmpty(providerList)){
                 return;
@@ -86,6 +95,7 @@ public class Client {
                 }
             }
         }finally {
+            loadBalance = new LoadBalance(connectionList);
             hasInit = true;
             lock.unlock();
         }
@@ -113,5 +123,43 @@ public class Client {
 
     public void setConsumerConfig(ConsumerConfig consumerConfig) {
         this.consumerConfig = consumerConfig;
+    }
+
+    /**
+     * 对连接的简单负载均衡，达到每次调用访问下一个连接
+     */
+    private class LoadBalance{
+
+         private List<Connection> connectionList;
+
+         private int current;
+
+
+         private int total;
+
+         public LoadBalance(List<Connection> connectionList) {
+             this.connectionList = connectionList;
+             total = connectionList.size();
+         }
+
+        /**
+         * 获得一个连接
+         * @return
+         */
+         public Connection getConnection(){
+             if(CollectionUtils.isEmpty(connectionList)){
+                 return null;
+             }
+             synchronized (connectionList) {
+
+                 if(current>= total){
+                     current = 0;
+                 }
+                 Connection connection = connectionList.get(current);
+                 current++;
+                 return connection;
+             }
+
+         }
     }
 }
