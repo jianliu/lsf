@@ -1,10 +1,9 @@
 package com.liuj.lsf.route.impl;
 
-import com.liuj.lsf.route.RouteHandle;
+import com.liuj.lsf.route.ClientRouteHandle;
 import com.liuj.lsf.route.ZooKRouteHandler;
 import com.liuj.lsf.server.Provider;
 import org.I0Itec.zkclient.IZkChildListener;
-import org.I0Itec.zkclient.IZkDataListener;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Created by liuj on 2016/11/7.
  */
-public class ZooKClientHandler extends ZooKRouteHandler implements RouteHandle {
+public class ZooKClientHandler extends ZooKRouteHandler implements ClientRouteHandle {
 
     private final ConcurrentMap<String, List<Provider>> allProviders = new ConcurrentHashMap<String, List<Provider>>();
 

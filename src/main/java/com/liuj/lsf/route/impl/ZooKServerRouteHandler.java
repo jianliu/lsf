@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by liuj on 2016/11/7.
  */
-public class ZooKServerHandler extends ZooKRouteHandler implements ServerRoute {
+public class ZooKServerRouteHandler extends ZooKRouteHandler implements ServerRoute {
 
     private final ConcurrentSet<String> infRegisterSet = new ConcurrentSet<String>();
 
@@ -22,7 +22,7 @@ public class ZooKServerHandler extends ZooKRouteHandler implements ServerRoute {
 
     private String serverHost;
 
-    public ZooKServerHandler(String root, String serverString, int timeout) {
+    public ZooKServerRouteHandler(String root, String serverString, int timeout) {
         super(root, serverString, timeout);
         this.serverHost = getLocalHost();
         //开启一个扫描线程,反复检查自己是否在zookeeper上

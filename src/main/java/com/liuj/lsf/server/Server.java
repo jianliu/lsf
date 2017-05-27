@@ -26,7 +26,9 @@ public class Server {
 
     private ChannelInboundHandlerAdapter serverHandler;
 
-    private NioEventLoopGroup workerGroup = new NioEventLoopGroup(200);
+    private int loopThreadsN = 200;
+
+    private NioEventLoopGroup workerGroup = new NioEventLoopGroup(loopThreadsN);
 
     public Server(ServerRoute serverRoute, ChannelInboundHandlerAdapter serverHandler, int port) {
         this.serverRoute = serverRoute;
@@ -46,7 +48,8 @@ public class Server {
     }
 
     public void run() throws Exception {
-        final NioEventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
+        //仅仅启动一个bossGroup即足够
+        final NioEventLoopGroup bossGroup = new NioEventLoopGroup(1); // (1)
         final NioEventLoopGroup workerGroup = this.workerGroup;
         try {
             ServerBootstrap b = new ServerBootstrap(); // (2)

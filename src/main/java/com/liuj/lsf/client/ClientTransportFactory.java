@@ -18,16 +18,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * group线程个数如何配置
+ * 假如客户端连接了100个服务，使用默认的线程池大小 cpu核心数*2,则，总共会生成200*cpu核心数的线程，线程资源是很宝贵的
+ * netty的nio是否可以考虑将大小直接设为1，这样一共只会生成100个线程，大大减少线程个数,但实际场景中应用都不是单线程环境
+ * 下运行的，为了兼顾这个问题，将默认大小改为 CPU_CORES + 1
  * Created by cdliujian1 on 2016/11/1.
  */
 public class ClientTransportFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(ClientTransportFactory.class);
 
+    private static final int CPU_CORES = Runtime.getRuntime().availableProcessors();
+
     public static Channel buildChannel(String host,int port){
         Channel channel = null;
         Bootstrap b = new Bootstrap(); // (1)
-        b.group(new NioEventLoopGroup()); // (2)
+        b.group(new NioEventLoopGroup(CPU_CORES + 1)); // (2) 创建的线程池个数
         b.channel(NioSocketChannel.class); // (3)
         b.option(ChannelOption.SO_KEEPALIVE, true); // (4)
 

@@ -1,7 +1,5 @@
 package com.liuj.lsf.server;
 
-import io.netty.channel.Channel;
-
 /**
  * Created by cdliujian1 on 2016/11/1.
  */
@@ -9,6 +7,14 @@ public class Provider {
 
     private String host;
     private int port;
+
+    public Provider() {
+    }
+
+    public Provider(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
 
     public String getHost() {
         return host;

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by liuj on 2016/11/7.
  */
-public interface RouteHandle {
+public interface ClientRouteHandle {
 
     /**
      * 订阅节点变更

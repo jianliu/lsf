@@ -7,7 +7,8 @@ import com.liuj.lsf.core.impl.LsfRequestServerHandle;
 import com.liuj.lsf.demo.mock.IServerImpl;
 import com.liuj.lsf.demo.mock.IService;
 import com.liuj.lsf.route.ServerRoute;
-import com.liuj.lsf.route.impl.ZooKServerHandler;
+import com.liuj.lsf.route.impl.DefaultServerRoute;
+import com.liuj.lsf.route.impl.ZooKServerRouteHandler;
 import com.liuj.lsf.server.Server;
 import com.liuj.lsf.server.ServerHandler;
 
@@ -20,12 +21,12 @@ import java.util.List;
 public class ServerMain {
 
     public static void main(String[] args) throws Exception {
-        ServerRoute serverRoute1 = new ZooKServerHandler(GlobalManager.zookeeperRoot, GlobalManager.zookeeperServerHost, GlobalManager.timeout);
+//        ServerRoute serverRoute1 = new ZooKServerRouteHandler(GlobalManager.zookeeperRoot, GlobalManager.zookeeperServerHost, GlobalManager.timeout);
 
         List<RequestHandle> requestHandleList = new ArrayList<RequestHandle>();
         requestHandleList.add(new LsfRequestServerHandle());
 
-        final Server server = new Server(serverRoute1,new ServerHandler(requestHandleList), GlobalManager.serverPort);
+        final Server server = new Server(new DefaultServerRoute(),new ServerHandler(requestHandleList), GlobalManager.serverPort);
         Thread t= new Thread(new Runnable() {
             public void run() {
                 //start server

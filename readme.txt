@@ -6,7 +6,7 @@ transport： netty
 序列化：暂时使用com.fasterxml.jackson
 
 
-client main entrance: com.liuj.lsf.demo.Main
+client main entrance: com.liuj.lsf.demo.ClientMain
 |server main entrance: com.liuj.lsf.demo.ServerMain
 
 com.liuj.lsf.GlobalManager 配置zookeeper 的serverHost port

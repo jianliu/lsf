@@ -7,41 +7,45 @@ import com.liuj.lsf.client.ProxyFactory;
 import com.liuj.lsf.config.ConsumerConfig;
 import com.liuj.lsf.demo.mock.IService;
 import com.liuj.lsf.demo.mock.User;
-import com.liuj.lsf.route.RouteHandle;
+import com.liuj.lsf.route.ClientRouteHandle;
+import com.liuj.lsf.route.impl.DefaultClientRoutHandle;
 import com.liuj.lsf.route.impl.ZooKClientHandler;
+import com.liuj.lsf.server.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 客户端启动
  * Created by cdliujian1 on 2016/11/4.
  */
-public class Main {
+public class ClientMain {
 
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientMain.class);
 
     public static void main(String[] args) throws Exception {
 
         //全局的handler
-        RouteHandle zooKClientHandler = new ZooKClientHandler(GlobalManager.zookeeperRoot, GlobalManager.zookeeperServerHost, GlobalManager.timeout);
+//        ClientRouteHandle zooKClientHandler = new ZooKClientHandler(GlobalManager.zookeeperRoot, GlobalManager.zookeeperServerHost, GlobalManager.timeout);
         ConsumerConfig consumerConfig = genConsumerBean();
 
-        Client client = ClientFactory.buildClient(consumerConfig, zooKClientHandler);
+        Provider provider = new Provider("127.0.0.1", GlobalManager.serverPort);
+        Client client = ClientFactory.buildClient(consumerConfig, new DefaultClientRoutHandle(provider));
 
         IService iService = ProxyFactory.buildProxy(IService.class, client);
         iService.amVoid();
-        User user = new User();
-
-        user.setName("what");
-        long start = System.currentTimeMillis();
-        long na =System.nanoTime();
-        for(int i=0;i<1000;i++) {
-            user.setId(i);
-            User newUser = iService.findByUser(user);
-            logger.info("user is :{}-{}", newUser.getId(), newUser.getName());
-        }
-        logger.info("cost time:{}na",System.nanoTime() - na);
-        logger.info("cst time:{}ms", System.currentTimeMillis() - start);
-        String response = null;
+//        User user = new User();
+//
+//        user.setName("what");
+//        long start = System.currentTimeMillis();
+//        long na =System.nanoTime();
+//        for(int i=0;i<1;i++) {
+//            user.setId(i);
+//            User newUser = iService.findByUser(user);
+//            logger.info("user is :{}-{}", newUser.getId(), newUser.getName());
+//        }
+//        logger.info("cost time:{}na",System.nanoTime() - na);
+//        logger.info("cst time:{}ms", System.currentTimeMillis() - start);
+//        String response = null;
 ////        response = iService.println("you get this");
 ////        logger.info("response is:{}",response);
 //        response = iService.printlnException("oha you");

@@ -77,7 +77,7 @@ public class DefaultClientTransport implements ClientTransport {
         } catch (InterruptedException e) {
             e.printStackTrace();
             this.futureMap.remove(baseMsg.getMsgHeader().getMsgId());
-            throw new LsfException("线程中断",e);
+            throw new LsfException("线程已经被中断",e);
         } catch (LsfException e) {
             this.futureMap.remove(baseMsg.getMsgHeader().getMsgId());
             throw e;

@@ -6,7 +6,7 @@ import com.liuj.lsf.exceptions.ExceptionHolder;
 import com.liuj.lsf.exceptions.LsfException;
 import com.liuj.lsf.msg.BaseMsg;
 import com.liuj.lsf.msg.ResponseMsg;
-import com.liuj.lsf.route.RouteHandle;
+import com.liuj.lsf.route.ClientRouteHandle;
 import com.liuj.lsf.server.Provider;
 import com.liuj.lsf.transport.Connection;
 import com.liuj.lsf.transport.impl.DefaultClientTransport;
@@ -30,9 +30,9 @@ public class Client {
     private volatile boolean  hasInit = false;
 
     private LoadBalance loadBalance;
-    private RouteHandle routeHandle;
+    private ClientRouteHandle routeHandle;
 
-    public Client(ConsumerConfig consumerConfig, RouteHandle routeHandle) {
+    public Client(ConsumerConfig consumerConfig, ClientRouteHandle routeHandle) {
         this.consumerConfig = consumerConfig;
         this.routeHandle = routeHandle;
         if(routeHandle != null) {
@@ -130,10 +130,9 @@ public class Client {
      */
     private class LoadBalance{
 
-         private List<Connection> connectionList;
+         private volatile List<Connection> connectionList;
 
          private int current;
-
 
          private int total;
 
