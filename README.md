@@ -1,6 +1,6 @@
  分布式服务框架  : L Service Framework
 ===
-当前很多企业不再采用webService这种重型架构，而采用SOA架构，不能服务之前使用服务框架来通信，这个仓库是一个实践，覆盖的面有限，旨在为搞清楚一些核心的东西而努力。
+当前很多互联网企业不再采用WebService这种基于HTTP方式的通信（没有用过WebService），而改为更底层高效的tcp层做点对点通信。lsf是一个实践，覆盖的面有限，旨在为搞清楚一些核心的东西而努力。
 
 ### 功能已实现的
 * 使用javassist来做java代理，它提前生成可顺序执行的字节码，而非反射的方式，效率较高
@@ -14,11 +14,6 @@
 * 没有web可视化工具
 
 
-### 遗留的问题
-* zookeeper不太适合做服务发现，一旦节点太多，会使zookeeper连接数爆满，甚至挂掉
-* jaskson做序列化的性能（包括序列化后的空间、序列化速度）低于类似messagepack这样的序列化工具，它其实更常用于web开发，网络传输中，应尽量使用序列化后体积小的工具
-* 未集成spring 命名空间，采用原始main方法形式，不过集成spring命名空间可以参考另一个仓库 [lmt](https://github.com/jianliu/lsf)
-
 ## 服务端启动方式
 ```java
 server main entrance: com.liuj.lsf.demo.ServerMain
@@ -29,3 +24,9 @@ client main entrance: com.liuj.lsf.demo.ClientMain
 ```
 ## zookeeper配置
 com.liuj.lsf.GlobalManager 配置zookeeper 的 `serverHost port`
+
+
+### 遗留的问题
+* zookeeper不太适合做服务发现，一旦节点太多，会使zookeeper连接数爆满，甚至挂掉
+* jaskson做序列化的性能（包括序列化后的空间、序列化速度）低于类似messagepack这样的序列化工具，它其实更常用于web开发，网络传输中，应尽量使用序列化后体积小的工具
+* 未集成spring 命名空间，采用原始main方法形式，不过集成spring命名空间可以参考另一个仓库 [lmq](https://github.com/jianliu/lmq)
