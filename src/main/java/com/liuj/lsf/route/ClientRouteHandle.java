@@ -5,6 +5,7 @@ import com.liuj.lsf.server.Provider;
 import java.util.List;
 
 /**
+ * 客户端寻址服务端地址的接口
  * Created by liuj on 2016/11/7.
  */
 public interface ClientRouteHandle {

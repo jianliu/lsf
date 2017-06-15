@@ -6,10 +6,7 @@ import com.liuj.lsf.client.ClientFactory;
 import com.liuj.lsf.client.ProxyFactory;
 import com.liuj.lsf.config.ConsumerConfig;
 import com.liuj.lsf.demo.mock.IService;
-import com.liuj.lsf.demo.mock.User;
-import com.liuj.lsf.route.ClientRouteHandle;
 import com.liuj.lsf.route.impl.DefaultClientRoutHandle;
-import com.liuj.lsf.route.impl.ZooKClientHandler;
 import com.liuj.lsf.server.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +23,17 @@ public class ClientMain {
 
         //全局的handler
 //        ClientRouteHandle zooKClientHandler = new ZooKClientHandler(GlobalManager.zookeeperRoot, GlobalManager.zookeeperServerHost, GlobalManager.timeout);
-        ConsumerConfig consumerConfig = genConsumerBean();
+        ConsumerConfig consumerConfig = genConsumerConfig();
 
         Provider provider = new Provider("127.0.0.1", GlobalManager.serverPort);
         Client client = ClientFactory.buildClient(consumerConfig, new DefaultClientRoutHandle(provider));
 
         IService iService = ProxyFactory.buildProxy(IService.class, client);
+//        User user = new User();
+//        user.setName("xx");
+//        user.setId(1);
+//                    User newUser = iService.findByUser(user);
+
         iService.amVoid();
 //        User user = new User();
 //
@@ -56,12 +58,12 @@ public class ClientMain {
 //        logger.info("user is :{}-{}",user.getId(), user.getName() );
     }
 
-    private static ConsumerConfig genConsumerBean() {
-        ConsumerConfig consumerBean = new ConsumerConfig();
-        consumerBean.setInterfaceId(IService.class.getCanonicalName());
-        consumerBean.setAlias("test");
-        consumerBean.setTimeout(2000);
-        return consumerBean;
+    private static ConsumerConfig genConsumerConfig() {
+        ConsumerConfig consumerConfig = new ConsumerConfig();
+        consumerConfig.setInterfaceId(IService.class.getCanonicalName());
+        consumerConfig.setAlias("test");
+        consumerConfig.setTimeout(3000);
+        return consumerConfig;
     }
 
 }

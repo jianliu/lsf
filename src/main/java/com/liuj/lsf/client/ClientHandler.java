@@ -2,12 +2,10 @@ package com.liuj.lsf.client;
 
 import com.liuj.lsf.core.ResponseListener;
 import com.liuj.lsf.core.impl.LsfResponseClientListener;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import com.liuj.lsf.msg.RequestMsg;
 import com.liuj.lsf.msg.ResponseMsg;
 import com.liuj.lsf.transport.impl.DefaultClientTransport;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
@@ -17,7 +15,7 @@ import java.util.List;
 /**
  * Created by cdliujian1 on 2016/6/19.
  */
-public class ClientHandler  extends ChannelInboundHandlerAdapter {
+public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     private DefaultClientTransport clientTransport;
 
@@ -45,12 +43,24 @@ public class ClientHandler  extends ChannelInboundHandlerAdapter {
             //responseMsg不引用byteBuf，方便gc
             responseMsg.setMsgBody(null);
 
-            for(ResponseListener responseListener: responseListenerList){
+            for (ResponseListener responseListener : responseListenerList) {
                 responseListener.onResponse(clientTransport, responseMsg);
             }
         }
 
     }
+
+//    @Override
+//    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+//        if (evt instanceof IdleStateEvent) {
+//            IdleStateEvent e = (IdleStateEvent) evt;
+//            if (e.state() == IdleState.READER_IDLE) {
+//                ctx.close();
+//            } else if (e.state() == IdleState.WRITER_IDLE) {
+////                                 ctx.writeAndFlush(new PingMessage());
+//            }
+//        }
+//    }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -63,6 +73,8 @@ public class ClientHandler  extends ChannelInboundHandlerAdapter {
             else if(event.state() == IdleState.ALL_IDLE)
                 System.out.println("all idle2");
         }
+
+
     }
 
     public void setClientTransport(DefaultClientTransport clientTransport) {
@@ -73,7 +85,7 @@ public class ClientHandler  extends ChannelInboundHandlerAdapter {
         this.responseListenerList = responseListenerList;
     }
 
-    public synchronized void addListener(ResponseListener responseListener){
+    public synchronized void addListener(ResponseListener responseListener) {
         this.responseListenerList.add(responseListener);
     }
 

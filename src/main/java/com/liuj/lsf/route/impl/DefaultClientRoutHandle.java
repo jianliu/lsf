@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 默认路由实现，直接路由到某一台机器
  * Created by cdliujian1 on 2017/5/27.
  */
 public class DefaultClientRoutHandle implements ClientRouteHandle {

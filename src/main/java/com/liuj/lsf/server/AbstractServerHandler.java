@@ -41,6 +41,12 @@ public abstract class AbstractServerHandler extends ChannelInboundHandlerAdapter
         channel.writeAndFlush(responseMsg, channel.voidPromise());
     }
 
+    /**
+     * 发送服务端的响应
+     * @param messageId
+     * @param channel
+     * @param messageResult
+     */
     protected void sendResponse(long messageId, Channel channel, Object messageResult) {
         MsgHeader msgHeader = new MsgHeader(Constants.RESPONSE_MSG);
         if(messageResult != null) {
@@ -55,7 +61,8 @@ public abstract class AbstractServerHandler extends ChannelInboundHandlerAdapter
         responseMsg.setMsgHeader(msgHeader);
         responseMsg.getMsgHeader().setMsgId(messageId);
 
-        channel.writeAndFlush(responseMsg, channel.voidPromise());
+        //如果使用voidPromise，则无法和IdleStateHandler同时使用，因为它会触发voidPromise的addListener(...)操作，从而导致write失败
+        channel.writeAndFlush(responseMsg, channel.newPromise());
     }
 
 }

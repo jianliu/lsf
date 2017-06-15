@@ -6,6 +6,8 @@ import com.liuj.lsf.msg.ResponseMsg;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +82,21 @@ public class ServerHandler extends AbstractServerHandler {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if(IdleStateEvent.class.isAssignableFrom(evt.getClass())){
+            IdleStateEvent event = (IdleStateEvent) evt;
+            if(event.state() == IdleState.READER_IDLE)
+                System.out.println("read idle2");
+            else if(event.state() == IdleState.WRITER_IDLE)
+                System.out.println("write idle2");
+            else if(event.state() == IdleState.ALL_IDLE)
+                System.out.println("all idle2");
+        }
+
+
     }
 
     public void setRequestHandleList(RequestHandle... requestHandleList) {

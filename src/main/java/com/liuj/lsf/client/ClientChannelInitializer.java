@@ -10,6 +10,7 @@ import com.liuj.lsf.codec.LSFEncoder;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 
 /**
  * Created by cdliujian1 on 2016/11/1.
@@ -26,11 +27,13 @@ public class ClientChannelInitializer extends ChannelInitializer<SocketChannel> 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
-
+        ch.pipeline().addLast(new IdleStateHandler(5, 5, 0));
         pipeline.addLast(new LSFEncoder());
         pipeline.addLast(new LSFDecoder());
-//        pipeline.addLast("idleStateHandler", new IdleStateHandler(4, 0, 10));
+//        pipeline.addLast("readtimeout", new ReadTimeoutHandler(5));
+
         pipeline.addLast(Constants.CLIENT_HANDLER, clientHandler);
+
     }
 
     @Override
